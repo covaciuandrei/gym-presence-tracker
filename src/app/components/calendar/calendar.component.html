@@ -95,12 +95,26 @@
       
       <!-- Edit Mode -->
       <div class="workout-type-editor" *ngIf="isEditingType">
-        <select [(ngModel)]="editTypeId" class="type-select">
-          <option value="">-- No type --</option>
-          <option *ngFor="let type of workoutTypes" [value]="type.id">
-            {{ type.icon }} {{ type.name }}
-          </option>
-        </select>
+        <label class="editor-label">Select Workout Type</label>
+        <div class="custom-select" [class.open]="dropdownOpen">
+          <div class="select-trigger" (click)="toggleDropdown()">
+            <span *ngIf="getSelectedType()">
+              {{ getSelectedType()!.icon }} {{ getSelectedType()!.name }}
+            </span>
+            <span *ngIf="!getSelectedType()">-- No type --</span>
+            <span class="chevron"></span>
+          </div>
+          <div class="options-container" *ngIf="dropdownOpen">
+            <div class="option" (click)="selectType('')">
+              <span class="option-name">-- No type --</span>
+            </div>
+            <div class="option" *ngFor="let type of workoutTypes" (click)="selectType(type.id)">
+              <span class="option-icon">{{ type.icon }}</span>
+              <span class="option-name">{{ type.name }}</span>
+            </div>
+          </div>
+        </div>
+        
         <div class="edit-actions">
           <button class="btn-small btn-save" (click)="saveEditType()">Save</button>
           <button class="btn-small btn-cancel" (click)="cancelEditType()">Cancel</button>
@@ -114,12 +128,25 @@
       <!-- Workout Type Selector -->
       <div class="workout-type-selector" *ngIf="workoutTypes.length > 0">
         <label>Workout Type (optional)</label>
-        <select [(ngModel)]="selectedTypeId" class="type-select">
-          <option value="">-- Select type --</option>
-          <option *ngFor="let type of workoutTypes" [value]="type.id">
-            {{ type.icon }} {{ type.name }}
-          </option>
-        </select>
+        
+        <div class="custom-select" [class.open]="dropdownOpen">
+          <div class="select-trigger" (click)="toggleDropdown()">
+            <span *ngIf="getSelectedType()">
+              {{ getSelectedType()!.icon }} {{ getSelectedType()!.name }}
+            </span>
+            <span *ngIf="!getSelectedType()">-- Select type --</span>
+            <span class="chevron"></span>
+          </div>
+          <div class="options-container" *ngIf="dropdownOpen">
+            <div class="option" (click)="selectType('')">
+              <span class="option-name">-- Select type --</span>
+            </div>
+            <div class="option" *ngFor="let type of workoutTypes" (click)="selectType(type.id)">
+              <span class="option-icon">{{ type.icon }}</span>
+              <span class="option-name">{{ type.name }}</span>
+            </div>
+          </div>
+        </div>
       </div>
       
       <p class="no-types-hint" *ngIf="workoutTypes.length === 0">

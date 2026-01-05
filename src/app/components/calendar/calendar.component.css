@@ -324,26 +324,127 @@
   margin-bottom: 8px;
 }
 
-.type-select {
+/* Custom Select Dropdown */
+.custom-select {
+  position: relative;
   width: 100%;
-  padding: 12px;
+}
+
+.select-trigger {
+  width: 100%;
+  padding: 12px 16px;
   font-size: 1rem;
   border: 2px solid var(--border-color);
-  border-radius: 10px;
+  border-radius: 14px;
   background: var(--bg-color);
   color: var(--text-primary);
   cursor: pointer;
-  transition: border-color 0.2s;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
-.type-select:focus {
-  outline: none;
+.custom-select.open .select-trigger {
   border-color: var(--primary-color);
+  box-shadow: 0 0 0 4px var(--primary-light);
+}
+
+.select-trigger:hover {
+  border-color: var(--primary-color);
+  background: var(--card-bg);
+}
+
+.select-trigger .chevron {
+  width: 18px;
+  height: 18px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748b' stroke-width='2'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  transition: transform 0.2s;
+}
+
+.custom-select.open .chevron {
+  transform: rotate(180deg);
+}
+
+.options-container {
+  position: absolute;
+  top: calc(100% + 8px); /* Space below input */
+  left: 0;
+  right: 0;
+  background: var(--card-bg);
+  border-radius: 14px; /* Fully rounded corners for the dropdown */
+  border: 1px solid var(--border-color);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  z-index: 1000;
+  max-height: 250px;
+  overflow-y: auto;
+  animation: slideDown 0.2s ease-out;
+}
+
+/* Custom Rounded Scrollbar */
+.options-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.options-container::-webkit-scrollbar-track {
+  background: transparent;
+  margin: 4px 0;
+}
+
+.options-container::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 20px;
+}
+
+.options-container::-webkit-scrollbar-thumb:hover {
+  background: var(--text-secondary);
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.option {
+  padding: 12px 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: background 0.1s;
+  color: var(--text-primary);
+}
+
+.option:hover {
+  background: var(--hover-bg);
+  color: var(--primary-color);
+}
+
+.option:first-child {
+  border-radius: 14px 14px 0 0;
+}
+
+.option:last-child {
+  border-radius: 0 0 14px 14px;
+}
+
+.option-icon {
+  font-size: 1.2rem;
+}
+
+.option-name {
+  font-weight: 500;
 }
 
 .no-types-hint {
   color: var(--text-secondary);
   font-size: 0.85rem;
+  margin-top: 8px;
   margin-bottom: 16px;
 }
 
@@ -420,10 +521,12 @@
   color: var(--text-secondary);
 }
 
+
 .popup-actions {
   display: flex;
   flex-direction: column;
   gap: 10px;
+  margin-top: 24px; /* Added spacing from content above */
 }
 
 .btn {
@@ -534,5 +637,27 @@
 
   .popup h3 {
     font-size: 1.1rem;
+  }
+}
+
+/* Web/Desktop Icon Scaling */
+@media (min-width: 1024px) {
+  .workout-icon {
+    font-size: 1.6rem; /* Compensates for 0.8x root scale to be 1.5x mobile size */
+    bottom: 6px;
+  }
+
+  .attendance-dot {
+    width: 10px; /* Increased from 6px */
+    height: 10px;
+    bottom: 8px;
+  }
+
+  .mini-icon {
+    font-size: 1.15rem; /* Compensates for 0.8x root scale to be 1.5x mobile size */
+  }
+
+  .mini-day.has-icon {
+    font-size: 1.25rem; /* Compensates for 0.8x root scale to be 1.5x mobile size */
   }
 }

@@ -48,6 +48,10 @@ export class CalendarComponent implements OnInit, OnDestroy {
   selectedTypeId: string = '';
   isEditingType = false;
   editTypeId: string = '';
+  
+  // Custom Dropdown State
+  dropdownOpen = false;
+
 
   private authSub: Subscription | null = null;
   private userId: string | null = null;
@@ -303,6 +307,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
     this.showPopup = false;
     this.selectedDate = null;
     this.isEditingType = false;
+    this.dropdownOpen = false; // Reset dropdown state
   }
 
   startEditType() {
@@ -405,6 +410,26 @@ export class CalendarComponent implements OnInit, OnDestroy {
 
   getWorkoutIcon(fullDate: string): string | null {
     return this.iconCache.get(fullDate) || null;
+  }
+
+  // Custom Dropdown Methods
+  toggleDropdown() {
+    this.dropdownOpen = !this.dropdownOpen;
+  }
+
+  selectType(typeId: string) {
+    if (this.isEditingType) {
+      this.editTypeId = typeId;
+    } else {
+      this.selectedTypeId = typeId;
+    }
+    this.dropdownOpen = false;
+  }
+
+  getSelectedType(): TrainingType | undefined {
+    const id = this.isEditingType ? this.editTypeId : this.selectedTypeId;
+    if (!id) return undefined;
+    return this.workoutTypes.find(t => t.id === id);
   }
 
   getWorkoutTypeName(fullDate: string): string | null {
