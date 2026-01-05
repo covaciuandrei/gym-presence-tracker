@@ -252,12 +252,16 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(255, 255, 255, 0.8);
+  background: var(--overlay-bg);
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 20px;
   z-index: 10;
+}
+
+:host-context(.dark-mode) .loading-overlay {
+  background: rgba(30, 41, 59, 0.85);
 }
 
 .spinner {
