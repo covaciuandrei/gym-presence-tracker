@@ -20,6 +20,7 @@ A modern, mobile-responsive web application designed to help you and your friend
 -   **High Performance**: Optimized Firestore queries using parallel month loading for snappy dashboard transitions.
 -   **Responsive Design**: Mobile-first premium UI that looks stunning on any device.
 -   **Data Privacy**: Complete isolation of user data through secure Firestore rules.
+-   **Progressive Web App (PWA)**: Installable on mobile and desktop devices with offline support and native-like performance.
 
 ## 🛠️ Tech Stack
 
