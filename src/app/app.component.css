@@ -6,6 +6,9 @@
 
 .main-content {
   flex: 1;
+}
+
+.main-content.has-nav {
   padding-bottom: 5rem;
 }
 

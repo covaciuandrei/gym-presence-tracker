@@ -1,0 +1,44 @@
+<div class="settings-container">
+  <header class="page-header">
+    <a routerLink="/profile" class="back-btn">‹</a>
+    <h2>Settings</h2>
+  </header>
+
+  <div class="settings-content">
+    <div class="settings-section">
+      <h4>About</h4>
+      
+      <div class="setting-item">
+        <div class="setting-info">
+          <span class="setting-label">App Version</span>
+          <span class="setting-value">{{ appVersion }}</span>
+        </div>
+      </div>
+
+      <div class="setting-item">
+        <div class="setting-info">
+          <span class="setting-label">Built With</span>
+          <span class="setting-value">Angular + Firebase</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <h4>Coming Soon</h4>
+      
+      <div class="setting-item disabled">
+        <div class="setting-info">
+          <span class="setting-label">Theme</span>
+          <span class="setting-value">System Default</span>
+        </div>
+      </div>
+
+      <div class="setting-item disabled">
+        <div class="setting-info">
+          <span class="setting-label">Export Data</span>
+          <span class="setting-value">Not available</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

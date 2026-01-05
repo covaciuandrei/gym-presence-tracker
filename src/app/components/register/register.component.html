@@ -1,0 +1,113 @@
+<div class="auth-container">
+  <div class="auth-card">
+    <div class="auth-header">
+      <div class="logo">💪</div>
+      <h1>Create Account</h1>
+      <p>Start tracking your gym progress today</p>
+    </div>
+
+    <form (ngSubmit)="onSubmit()" class="auth-form">
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input
+          type="email"
+          id="email"
+          [(ngModel)]="email"
+          name="email"
+          placeholder="Enter your email"
+          autocomplete="email"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <div class="password-input-wrapper">
+          <input
+            [type]="showPassword ? 'text' : 'password'"
+            id="password"
+            [(ngModel)]="password"
+            name="password"
+            placeholder="Create a strong password"
+            autocomplete="new-password"
+            required
+          />
+          <button 
+            type="button" 
+            class="toggle-password"
+            (click)="togglePasswordVisibility()"
+          >
+            {{ showPassword ? '👁️' : '👁️‍🗨️' }}
+          </button>
+        </div>
+        <div class="password-strength" *ngIf="password">
+          <div class="strength-bar">
+            <div 
+              class="strength-fill" 
+              [style.width.%]="getPasswordStrength().level * 33.33"
+              [style.background]="getPasswordStrength().color"
+            ></div>
+          </div>
+          <span class="strength-label" [style.color]="getPasswordStrength().color">
+            {{ getPasswordStrength().label }}
+          </span>
+        </div>
+        <div class="password-requirements">
+          <span [class.met]="password.length >= 8">• 8+ characters</span>
+          <span [class.met]="password.match('[A-Z]')">• Uppercase</span>
+          <span [class.met]="password.match('[a-z]')">• Lowercase</span>
+          <span [class.met]="password.match('[0-9]')">• Number</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="confirmPassword">Confirm Password</label>
+        <div class="password-input-wrapper">
+          <input
+            [type]="showConfirmPassword ? 'text' : 'password'"
+            id="confirmPassword"
+            [(ngModel)]="confirmPassword"
+            name="confirmPassword"
+            placeholder="Confirm your password"
+            autocomplete="new-password"
+            required
+          />
+          <button 
+            type="button" 
+            class="toggle-password"
+            (click)="toggleConfirmPasswordVisibility()"
+          >
+            {{ showConfirmPassword ? '👁️' : '👁️‍🗨️' }}
+          </button>
+        </div>
+        <span class="match-indicator" *ngIf="confirmPassword">
+          <span *ngIf="password === confirmPassword" class="match">✓ Passwords match</span>
+          <span *ngIf="password !== confirmPassword" class="no-match">✗ Passwords don't match</span>
+        </span>
+      </div>
+
+      <div class="error-message" *ngIf="errorMessage">
+        {{ errorMessage }}
+      </div>
+
+      <div class="success-card" *ngIf="successMessage">
+        <div class="success-icon">✅</div>
+        <h3>Account Created!</h3>
+        <p>{{ successMessage }}</p>
+        <button class="btn-primary" (click)="goToLogin()">
+          Go to Sign In ({{ redirectCountdown }}s)
+        </button>
+        <p class="redirect-hint">Redirecting automatically...</p>
+      </div>
+
+      <button type="submit" class="btn-primary" [disabled]="isLoading || successMessage">
+        <span *ngIf="!isLoading">Create Account</span>
+        <span *ngIf="isLoading" class="loading-spinner"></span>
+      </button>
+    </form>
+
+    <div class="auth-footer">
+      <p>Already have an account? <a routerLink="/login">Sign in</a></p>
+    </div>
+  </div>
+</div>

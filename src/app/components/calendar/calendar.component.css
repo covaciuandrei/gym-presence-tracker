@@ -155,6 +155,13 @@
   bottom: 6px;
 }
 
+.workout-icon {
+  position: absolute;
+  bottom: 2px;
+  font-size: 0.85rem;
+  line-height: 1;
+}
+
 /* Yearly View */
 .yearly-view {
   display: grid;
@@ -230,6 +237,14 @@
   font-weight: 600;
 }
 
+.mini-day.has-icon {
+  font-size: 0.65rem;
+}
+
+.mini-icon {
+  font-size: 0.6rem;
+}
+
 /* Loading */
 .loading-overlay {
   position: absolute;
@@ -292,8 +307,117 @@
 
 .popup p {
   color: var(--text-secondary);
-  margin: 0 0 24px 0;
+  margin: 0 0 16px 0;
   font-size: 1rem;
+}
+
+.workout-type-selector {
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.workout-type-selector label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+
+.type-select {
+  width: 100%;
+  padding: 12px;
+  font-size: 1rem;
+  border: 2px solid var(--border-color);
+  border-radius: 10px;
+  background: var(--bg-color);
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.type-select:focus {
+  outline: none;
+  border-color: var(--primary-color);
+}
+
+.no-types-hint {
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  margin-bottom: 16px;
+}
+
+.workout-type-display {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px;
+  background: var(--hover-bg);
+  border-radius: 10px;
+  margin-bottom: 16px;
+}
+
+.workout-type-display .type-icon {
+  font-size: 1.5rem;
+}
+
+.workout-type-display .type-name {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  flex: 1;
+}
+
+.workout-type-display .no-type {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  font-style: italic;
+  flex: 1;
+}
+
+.edit-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: background 0.2s;
+}
+
+.edit-btn:hover {
+  background: var(--border-color);
+}
+
+.workout-type-editor {
+  margin-bottom: 16px;
+}
+
+.edit-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.btn-small {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  flex: 1;
+}
+
+.btn-save {
+  background: var(--success-color);
+  color: white;
+}
+
+.btn-cancel {
+  background: var(--hover-bg);
+  color: var(--text-secondary);
 }
 
 .popup-actions {

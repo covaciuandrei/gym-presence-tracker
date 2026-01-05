@@ -1,0 +1,59 @@
+<div class="profile-container">
+  <header class="profile-header">
+    <h2>Profile</h2>
+  </header>
+
+  <div class="profile-content">
+    <!-- User Info Card -->
+    <div class="user-card">
+      <div class="user-avatar">
+        {{ getUserInitial() }}
+      </div>
+      <div class="user-info">
+        <h3>{{ user?.displayName || 'Gym Tracker User' }}</h3>
+        <p>{{ user?.email }}</p>
+        <span class="verified-badge" *ngIf="user?.emailVerified">
+          ✓ Verified
+        </span>
+      </div>
+    </div>
+
+    <!-- Menu Items -->
+    <div class="menu-section">
+      <h4>Manage</h4>
+      
+      <a routerLink="/workout-types" class="menu-item">
+        <div class="menu-icon">🏋️</div>
+        <div class="menu-content">
+          <span class="menu-title">Workout Types</span>
+          <span class="menu-subtitle">Manage your training categories</span>
+        </div>
+        <span class="menu-arrow">›</span>
+      </a>
+
+      <a routerLink="/settings" class="menu-item">
+        <div class="menu-icon">⚙️</div>
+        <div class="menu-content">
+          <span class="menu-title">Settings</span>
+          <span class="menu-subtitle">App preferences</span>
+        </div>
+        <span class="menu-arrow">›</span>
+      </a>
+    </div>
+
+    <!-- Account Section -->
+    <div class="menu-section">
+      <h4>Account</h4>
+      
+      <button class="menu-item logout-btn" (click)="logout()" [disabled]="isLoading">
+        <div class="menu-icon">🚪</div>
+        <div class="menu-content">
+          <span class="menu-title">Sign Out</span>
+          <span class="menu-subtitle">Log out of your account</span>
+        </div>
+        <span class="menu-arrow" *ngIf="!isLoading">›</span>
+        <span class="loading-spinner" *ngIf="isLoading"></span>
+      </button>
+    </div>
+  </div>
+</div>

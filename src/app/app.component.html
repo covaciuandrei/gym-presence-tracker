@@ -1,6 +1,7 @@
 <div class="app-container">
-  <nav class="bottom-nav">
-    <a routerLink="/calendar" routerLinkActive="active" class="nav-item">
+  <!-- Bottom Navigation (only shown when authenticated and not on auth pages) -->
+  <nav class="bottom-nav" *ngIf="showNav">
+    <a routerLink="/calendar" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-item">
       <span class="nav-icon">📅</span>
       <span class="nav-label">Calendar</span>
     </a>
@@ -8,9 +9,13 @@
       <span class="nav-icon">📊</span>
       <span class="nav-label">Stats</span>
     </a>
+    <a routerLink="/profile" routerLinkActive="active" class="nav-item">
+      <span class="nav-icon">👤</span>
+      <span class="nav-label">Profile</span>
+    </a>
   </nav>
   
-  <main class="main-content">
+  <main class="main-content" [class.has-nav]="showNav">
     <router-outlet></router-outlet>
   </main>
 </div>

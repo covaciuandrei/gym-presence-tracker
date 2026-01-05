@@ -1,0 +1,109 @@
+<div class="auth-container">
+  <div class="auth-card">
+    <!-- Loading State -->
+    <div class="loading-state" *ngIf="isLoading && !successMessage && !errorMessage">
+      <div class="spinner-large"></div>
+      <p *ngIf="mode === 'verifyEmail'">Verifying your email...</p>
+      <p *ngIf="mode === 'resetPassword'">Validating reset link...</p>
+    </div>
+
+    <!-- Email Verification Success -->
+    <div class="success-state" *ngIf="mode === 'verifyEmail' && successMessage">
+      <div class="success-icon">✅</div>
+      <h1>Email Verified!</h1>
+      <p>{{ successMessage }}</p>
+      <a routerLink="/login" class="btn-primary">Sign In</a>
+    </div>
+
+    <!-- Password Reset Form -->
+    <div class="reset-form" *ngIf="mode === 'resetPassword' && !isLoading && !successMessage && !errorMessage">
+      <div class="auth-header">
+        <div class="logo">🔒</div>
+        <h1>Set New Password</h1>
+        <p>Create a new password for {{ resetEmail }}</p>
+      </div>
+
+      <form (ngSubmit)="onPasswordReset()" class="auth-form">
+        <div class="form-group">
+          <label for="newPassword">New Password</label>
+          <div class="password-input-wrapper">
+            <input
+              [type]="showPassword ? 'text' : 'password'"
+              id="newPassword"
+              [(ngModel)]="newPassword"
+              name="newPassword"
+              placeholder="Enter new password"
+              autocomplete="new-password"
+              required
+            />
+            <button 
+              type="button" 
+              class="toggle-password"
+              (click)="togglePasswordVisibility()"
+            >
+              {{ showPassword ? '👁️' : '👁️‍🗨️' }}
+            </button>
+          </div>
+          <div class="password-strength" *ngIf="newPassword">
+            <div class="strength-bar">
+              <div 
+                class="strength-fill" 
+                [style.width.%]="getPasswordStrength().level * 33.33"
+                [style.background]="getPasswordStrength().color"
+              ></div>
+            </div>
+            <span class="strength-label" [style.color]="getPasswordStrength().color">
+              {{ getPasswordStrength().label }}
+            </span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="confirmPassword">Confirm Password</label>
+          <div class="password-input-wrapper">
+            <input
+              [type]="showConfirmPassword ? 'text' : 'password'"
+              id="confirmPassword"
+              [(ngModel)]="confirmPassword"
+              name="confirmPassword"
+              placeholder="Confirm new password"
+              autocomplete="new-password"
+              required
+            />
+            <button 
+              type="button" 
+              class="toggle-password"
+              (click)="toggleConfirmPasswordVisibility()"
+            >
+              {{ showConfirmPassword ? '👁️' : '👁️‍🗨️' }}
+            </button>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-primary">
+          Reset Password
+        </button>
+      </form>
+    </div>
+
+    <!-- Password Reset Success -->
+    <div class="success-state" *ngIf="mode === 'resetPassword' && successMessage">
+      <div class="success-icon">🎉</div>
+      <h1>Password Reset!</h1>
+      <p>{{ successMessage }}</p>
+      <a routerLink="/login" class="btn-primary">Sign In</a>
+    </div>
+
+    <!-- Error State -->
+    <div class="error-state" *ngIf="errorMessage">
+      <div class="error-icon">⚠️</div>
+      <h1>Something went wrong</h1>
+      <p>{{ errorMessage }}</p>
+      <div class="error-actions">
+        <a *ngIf="mode === 'verifyEmail'" routerLink="/login" class="btn-primary">Go to Sign In</a>
+        <a *ngIf="mode === 'resetPassword'" routerLink="/forgot-password" class="btn-primary">Request New Link</a>
+        <a routerLink="/login" class="btn-secondary">Back to Sign In</a>
+      </div>
+    </div>
+  </div>
+</div>

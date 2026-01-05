@@ -199,6 +199,164 @@
   font-weight: 500;
 }
 
+/* Workout Summary */
+.workout-summary {
+  margin-bottom: 24px;
+}
+
+.stat-card.wide {
+  width: 100%;
+}
+
+/* Workout Type List */
+.workout-type-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.workout-type-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: var(--hover-bg);
+  border-radius: 12px;
+}
+
+.workout-type-item .type-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 120px;
+}
+
+.workout-type-item .type-icon {
+  font-size: 1.5rem;
+}
+
+.workout-type-item .type-name {
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 0.9rem;
+}
+
+.type-bar-container {
+  flex: 1;
+  height: 24px;
+  background: var(--border-color);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.type-bar {
+  height: 100%;
+  border-radius: 12px;
+  transition: width 0.3s ease;
+  min-width: 8px;
+}
+
+.workout-type-item .type-count {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  min-width: 40px;
+  text-align: right;
+}
+
+.no-data {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--text-secondary);
+}
+
+.no-data p {
+  margin: 0 0 8px 0;
+}
+
+.no-data .hint {
+  font-size: 0.85rem;
+  opacity: 0.8;
+}
+
+/* Monthly Section */
+.monthly-section {
+  margin-bottom: 16px;
+}
+
+.month-picker {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.nav-btn-small {
+  background: var(--hover-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  width: 36px;
+  height: 36px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nav-btn-small:hover {
+  background: var(--primary-color);
+  color: white;
+  border-color: var(--primary-color);
+}
+
+.month-title {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  min-width: 150px;
+  text-align: center;
+}
+
+.month-total {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.month-total .total-value {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--primary-color);
+}
+
+.month-total .total-label {
+  font-size: 1rem;
+  color: var(--text-secondary);
+}
+
+.yearly-section {
+  opacity: 0.8;
+}
+
+.workout-type-list.compact .workout-type-item {
+  padding: 8px 12px;
+}
+
+.workout-type-list.compact .type-icon {
+  font-size: 1.2rem;
+}
+
+.workout-type-list.compact .type-bar-container {
+  height: 16px;
+}
+
 /* Monthly Details */
 .monthly-details {
   margin-top: 24px;

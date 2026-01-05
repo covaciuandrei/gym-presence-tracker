@@ -38,7 +38,10 @@
         [class.attended]="day.attended"
         (click)="onDayClick(day)">
         <span class="day-number">{{ day.date }}</span>
-        <span class="attendance-dot" *ngIf="day.attended"></span>
+        <span class="workout-icon" *ngIf="day.attended && getWorkoutIcon(day.fullDate)">
+          {{ getWorkoutIcon(day.fullDate) }}
+        </span>
+        <span class="attendance-dot" *ngIf="day.attended && !getWorkoutIcon(day.fullDate)"></span>
       </div>
     </div>
   </div>
@@ -57,8 +60,10 @@
           [class.empty]="day.date === 0"
           [class.today]="day.isToday"
           [class.attended]="day.attended"
+          [class.has-icon]="day.attended && getWorkoutIcon(day.fullDate)"
           (click)="day.date !== 0 && onDayClick(day)">
-          <span *ngIf="day.date !== 0">{{ day.date }}</span>
+          <span *ngIf="day.date !== 0 && !(day.attended && getWorkoutIcon(day.fullDate))">{{ day.date }}</span>
+          <span *ngIf="day.attended && getWorkoutIcon(day.fullDate)" class="mini-icon">{{ getWorkoutIcon(day.fullDate) }}</span>
         </div>
       </div>
     </div>
@@ -74,8 +79,54 @@
 <div class="popup-overlay" *ngIf="showPopup" (click)="closePopup()">
   <div class="popup" (click)="$event.stopPropagation()">
     <h3>{{ selectedDate?.fullDate }}</h3>
-    <p *ngIf="selectedDate?.attended">You went to the gym! 💪</p>
-    <p *ngIf="!selectedDate?.attended">Did you go to the gym?</p>
+    
+    <div *ngIf="selectedDate?.attended">
+      <p>You went to the gym! 💪</p>
+      
+      <!-- View Mode -->
+      <div class="workout-type-display" *ngIf="!isEditingType">
+        <ng-container *ngIf="getWorkoutIcon(selectedDate!.fullDate)">
+          <span class="type-icon">{{ getWorkoutIcon(selectedDate!.fullDate) }}</span>
+          <span class="type-name">{{ getWorkoutTypeName(selectedDate!.fullDate) }}</span>
+        </ng-container>
+        <span class="no-type" *ngIf="!getWorkoutIcon(selectedDate!.fullDate)">No workout type</span>
+        <button class="edit-btn" (click)="startEditType()" *ngIf="workoutTypes.length > 0">✏️</button>
+      </div>
+      
+      <!-- Edit Mode -->
+      <div class="workout-type-editor" *ngIf="isEditingType">
+        <select [(ngModel)]="editTypeId" class="type-select">
+          <option value="">-- No type --</option>
+          <option *ngFor="let type of workoutTypes" [value]="type.id">
+            {{ type.icon }} {{ type.name }}
+          </option>
+        </select>
+        <div class="edit-actions">
+          <button class="btn-small btn-save" (click)="saveEditType()">Save</button>
+          <button class="btn-small btn-cancel" (click)="cancelEditType()">Cancel</button>
+        </div>
+      </div>
+    </div>
+    
+    <div *ngIf="!selectedDate?.attended">
+      <p>Did you go to the gym?</p>
+      
+      <!-- Workout Type Selector -->
+      <div class="workout-type-selector" *ngIf="workoutTypes.length > 0">
+        <label>Workout Type (optional)</label>
+        <select [(ngModel)]="selectedTypeId" class="type-select">
+          <option value="">-- Select type --</option>
+          <option *ngFor="let type of workoutTypes" [value]="type.id">
+            {{ type.icon }} {{ type.name }}
+          </option>
+        </select>
+      </div>
+      
+      <p class="no-types-hint" *ngIf="workoutTypes.length === 0">
+        <small>💡 Add workout types in Profile → Workout Types</small>
+      </p>
+    </div>
+    
     <div class="popup-actions">
       <button 
         class="btn" 

@@ -1,6 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
-import { FirebaseService } from '../../services/firebase.service';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { Subscription } from 'rxjs';
+import { AuthService } from '../../services/auth.service';
+import { AttendanceRecord, FirebaseService, TrainingType } from '../../services/firebase.service';
 
 interface DayCell {
   date: number;
@@ -8,6 +11,7 @@ interface DayCell {
   isCurrentMonth: boolean;
   isToday: boolean;
   attended: boolean;
+  trainingTypeId?: string;
 }
 
 interface MonthData {
@@ -19,11 +23,11 @@ interface MonthData {
 @Component({
   selector: 'app-calendar',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './calendar.component.html',
   styleUrls: ['./calendar.component.css']
 })
-export class CalendarComponent implements OnInit {
+export class CalendarComponent implements OnInit, OnDestroy {
   currentDate = new Date();
   currentYear: number;
   currentMonth: number;
@@ -32,10 +36,21 @@ export class CalendarComponent implements OnInit {
   days: DayCell[] = [];
   monthsData: MonthData[] = [];
   attendedDates: Set<string> = new Set();
+  attendanceMap: Map<string, AttendanceRecord> = new Map();
+  iconCache: Map<string, string> = new Map(); // Cache icons to prevent infinite loops
   
   showPopup = false;
   selectedDate: DayCell | null = null;
   isLoading = false;
+  
+  // Workout types
+  workoutTypes: TrainingType[] = [];
+  selectedTypeId: string = '';
+  isEditingType = false;
+  editTypeId: string = '';
+
+  private authSub: Subscription | null = null;
+  private userId: string | null = null;
 
   monthNames = [
     'January', 'February', 'March', 'April', 'May', 'June',
@@ -44,25 +59,94 @@ export class CalendarComponent implements OnInit {
 
   weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
-  constructor(private firebaseService: FirebaseService) {
+  constructor(
+    private firebaseService: FirebaseService,
+    private authService: AuthService
+  ) {
     this.currentYear = this.currentDate.getFullYear();
     this.currentMonth = this.currentDate.getMonth();
   }
 
-  async ngOnInit() {
-    await this.loadAttendance();
-    this.generateCalendar();
+  ngOnInit() {
+    this.authSub = this.authService.currentUser$.subscribe(async user => {
+      if (user) {
+        this.userId = user.uid;
+        await this.loadWorkoutTypes();
+        await this.loadAttendance();
+        this.generateCalendar();
+      }
+    });
+  }
+
+  async loadWorkoutTypes() {
+    if (!this.userId) return;
+    try {
+      this.workoutTypes = await this.firebaseService.getTrainingTypes(this.userId);
+    } catch (error) {
+      console.error('Error loading workout types:', error);
+    }
+  }
+
+  ngOnDestroy() {
+    if (this.authSub) {
+      this.authSub.unsubscribe();
+    }
   }
 
   async loadAttendance() {
+    if (!this.userId) return;
+    
     this.isLoading = true;
     try {
-      const dates = await this.firebaseService.getAllAttendance();
-      this.attendedDates = new Set(dates);
+      let records: AttendanceRecord[];
+      if (this.viewMode === 'monthly') {
+        records = await this.loadMonthRange();
+      } else {
+        records = await this.firebaseService.getYearAttendance(this.userId, this.currentYear);
+      }
+      
+      // Build both set and map
+      this.attendedDates = new Set(records.map(r => r.date));
+      this.attendanceMap = new Map(records.map(r => [r.date, r]));
+      
+      // Pre-compute icon cache
+      this.buildIconCache();
     } catch (error) {
       console.error('Error loading attendance:', error);
     }
     this.isLoading = false;
+  }
+
+  private async loadMonthRange(): Promise<AttendanceRecord[]> {
+    if (!this.userId) return [];
+
+    const records: AttendanceRecord[] = [];
+    
+    // Previous month
+    let prevMonth = this.currentMonth;
+    let prevYear = this.currentYear;
+    if (prevMonth === 0) {
+      prevMonth = 12;
+      prevYear--;
+    }
+    
+    // Next month
+    let nextMonth = this.currentMonth + 2;
+    let nextYear = this.currentYear;
+    if (nextMonth > 12) {
+      nextMonth = 1;
+      nextYear++;
+    }
+
+    // Load 3 months in parallel
+    const [prev, current, next] = await Promise.all([
+      this.firebaseService.getMonthAttendance(this.userId, prevYear, prevMonth),
+      this.firebaseService.getMonthAttendance(this.userId, this.currentYear, this.currentMonth + 1),
+      this.firebaseService.getMonthAttendance(this.userId, nextYear, nextMonth)
+    ]);
+
+    records.push(...prev, ...current, ...next);
+    return records;
   }
 
   generateCalendar() {
@@ -174,7 +258,7 @@ export class CalendarComponent implements OnInit {
     return `${year}-${month}-${day}`;
   }
 
-  previousMonth() {
+  async previousMonth() {
     if (this.viewMode === 'monthly') {
       this.currentMonth--;
       if (this.currentMonth < 0) {
@@ -184,10 +268,11 @@ export class CalendarComponent implements OnInit {
     } else {
       this.currentYear--;
     }
+    await this.loadAttendance();
     this.generateCalendar();
   }
 
-  nextMonth() {
+  async nextMonth() {
     if (this.viewMode === 'monthly') {
       this.currentMonth++;
       if (this.currentMonth > 11) {
@@ -197,39 +282,112 @@ export class CalendarComponent implements OnInit {
     } else {
       this.currentYear++;
     }
+    await this.loadAttendance();
     this.generateCalendar();
   }
 
-  toggleView() {
+  async toggleView() {
     this.viewMode = this.viewMode === 'monthly' ? 'yearly' : 'monthly';
+    await this.loadAttendance();
     this.generateCalendar();
   }
 
   onDayClick(day: DayCell) {
     if (day.date === 0) return;
     this.selectedDate = day;
+    this.selectedTypeId = ''; // Reset selection
     this.showPopup = true;
   }
 
   closePopup() {
     this.showPopup = false;
     this.selectedDate = null;
+    this.isEditingType = false;
   }
 
-  async toggleAttendance() {
+  startEditType() {
     if (!this.selectedDate) return;
+    const attendance = this.attendanceMap.get(this.selectedDate.fullDate);
+    this.editTypeId = attendance?.trainingTypeId || '';
+    this.isEditingType = true;
+  }
+
+  async saveEditType() {
+    if (!this.selectedDate || !this.userId) return;
     
     this.isLoading = true;
     try {
-      const attended = await this.firebaseService.toggleAttendance(this.selectedDate.fullDate);
+      // Update the attendance with the new workout type
+      await this.firebaseService.markAttendance(
+        this.userId,
+        this.selectedDate.fullDate,
+        this.editTypeId || undefined
+      );
       
-      if (attended) {
-        this.attendedDates.add(this.selectedDate.fullDate);
-      } else {
-        this.attendedDates.delete(this.selectedDate.fullDate);
+      // Update local cache
+      const record = this.attendanceMap.get(this.selectedDate.fullDate);
+      if (record) {
+        record.trainingTypeId = this.editTypeId || undefined;
+        this.attendanceMap.set(this.selectedDate.fullDate, record);
       }
       
-      this.selectedDate.attended = attended;
+      // Update icon cache
+      if (this.editTypeId) {
+        const workoutType = this.workoutTypes.find(t => t.id === this.editTypeId);
+        if (workoutType?.icon) {
+          this.iconCache.set(this.selectedDate.fullDate, workoutType.icon);
+        }
+      } else {
+        this.iconCache.delete(this.selectedDate.fullDate);
+      }
+      
+      this.isEditingType = false;
+      this.generateCalendar();
+    } catch (error) {
+      console.error('Error updating workout type:', error);
+    }
+    this.isLoading = false;
+  }
+
+  cancelEditType() {
+    this.isEditingType = false;
+  }
+
+  async toggleAttendance() {
+    if (!this.selectedDate || !this.userId) return;
+    
+    this.isLoading = true;
+    try {
+      if (this.selectedDate.attended) {
+        // Remove attendance
+        await this.firebaseService.removeAttendance(this.userId, this.selectedDate.fullDate);
+        this.attendedDates.delete(this.selectedDate.fullDate);
+        this.attendanceMap.delete(this.selectedDate.fullDate);
+        this.iconCache.delete(this.selectedDate.fullDate);
+        this.selectedDate.attended = false;
+      } else {
+        // Add attendance with optional workout type
+        await this.firebaseService.markAttendance(
+          this.userId, 
+          this.selectedDate.fullDate, 
+          this.selectedTypeId || undefined
+        );
+        this.attendedDates.add(this.selectedDate.fullDate);
+        this.selectedDate.attended = true;
+        
+        // Update local cache immediately
+        const record = { date: this.selectedDate.fullDate, timestamp: new Date(), trainingTypeId: this.selectedTypeId || undefined };
+        this.attendanceMap.set(this.selectedDate.fullDate, record);
+        
+        // Update icon cache if workout type selected
+        if (this.selectedTypeId) {
+          const workoutType = this.workoutTypes.find(t => t.id === this.selectedTypeId);
+          if (workoutType?.icon) {
+            this.iconCache.set(this.selectedDate.fullDate, workoutType.icon);
+          }
+        }
+      }
+      
       this.generateCalendar();
     } catch (error) {
       console.error('Error toggling attendance:', error);
@@ -243,5 +401,28 @@ export class CalendarComponent implements OnInit {
       return `${this.monthNames[this.currentMonth]} ${this.currentYear}`;
     }
     return `${this.currentYear}`;
+  }
+
+  getWorkoutIcon(fullDate: string): string | null {
+    return this.iconCache.get(fullDate) || null;
+  }
+
+  getWorkoutTypeName(fullDate: string): string | null {
+    const attendance = this.attendanceMap.get(fullDate);
+    if (!attendance?.trainingTypeId) return null;
+    const workoutType = this.workoutTypes.find(t => t.id === attendance.trainingTypeId);
+    return workoutType?.name || null;
+  }
+
+  private buildIconCache() {
+    this.iconCache.clear();
+    this.attendanceMap.forEach((record, date) => {
+      if (record.trainingTypeId) {
+        const workoutType = this.workoutTypes.find(t => t.id === record.trainingTypeId);
+        if (workoutType?.icon) {
+          this.iconCache.set(date, workoutType.icon);
+        }
+      }
+    });
   }
 }
