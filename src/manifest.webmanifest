@@ -1,7 +1,7 @@
 {
   "name": "Gym Attendance Tracker",
   "short_name": "GymTracker",
-  "theme_color": "#6366f1",
+  "theme_color": "#f8fafc",
   "background_color": "#f8fafc",
   "display": "standalone",
   "scope": "./",
