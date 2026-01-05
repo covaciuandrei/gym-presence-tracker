@@ -54,17 +54,18 @@ A modern, mobile-responsive web application designed to help you track your gym 
     
     Then, fill in your Firebase configuration keys in the `.env` file:
     ```env
-    NG_APP_FIREBASE_API_KEY=your_api_key
-    NG_APP_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
-    NG_APP_FIREBASE_PROJECT_ID=your_project_id
-    NG_APP_FIREBASE_STORAGE_BUCKET=your_project.appspot.com
-    NG_APP_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
-    NG_APP_FIREBASE_APP_ID=your_app_id
+    FIREBASE_API_KEY=your_api_key
+    FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
+    FIREBASE_PROJECT_ID=your_project_id
+    FIREBASE_STORAGE_BUCKET=your_project.appspot.com
+    FIREBASE_MESSAGING_SENDER_ID=your_sender_id
+    FIREBASE_APP_ID=your_app_id
+    FIREBASE_MEASUREMENT_ID=your_measurement_id
     ```
 
 4.  **Run the application**
     ```bash
-    ng serve
+    npm start
     ```
     Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
 
