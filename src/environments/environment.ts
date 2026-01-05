@@ -1,13 +1,12 @@
 export const environment = {
   production: false,
   firebase: {
-    // TODO: Replace with your Firebase config from Firebase Console
-    // Go to: Firebase Console > Project Settings > Your Apps > Web App
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-    projectId: "YOUR_PROJECT_ID",
-    storageBucket: "YOUR_PROJECT_ID.appspot.com",
-    messagingSenderId: "YOUR_SENDER_ID",
-    appId: "YOUR_APP_ID"
+    apiKey: "AIzaSyCe4469f7K-fxhE78NMJ2fjbXwHiVedL3Q",
+    authDomain: "gym-presence-tracker.firebaseapp.com",
+    projectId: "gym-presence-tracker",
+    storageBucket: "gym-presence-tracker.firebasestorage.app",
+    messagingSenderId: "260816404492",
+    appId: "1:260816404492:web:38886b6183a4ac4872ae29",
+    measurementId: "G-HPRZ6QWN1V"
   }
 };
