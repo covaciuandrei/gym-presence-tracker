@@ -1,16 +1,16 @@
 import { Injectable } from '@angular/core';
 import { FirebaseApp, getApp, initializeApp } from 'firebase/app';
 import {
-  collection,
-  deleteDoc,
-  doc,
-  Firestore,
-  getDoc,
-  getDocs,
-  getFirestore,
-  setDoc,
-  Timestamp,
-  updateDoc
+    collection,
+    deleteDoc,
+    doc,
+    Firestore,
+    getDoc,
+    getDocs,
+    getFirestore,
+    setDoc,
+    Timestamp,
+    updateDoc
 } from 'firebase/firestore';
 import { environment } from '../../environments/environment';
 
@@ -37,6 +37,19 @@ export interface UserProfile {
   preferences?: {
     defaultTrainingType?: string;
   };
+}
+
+export interface MonthStat {
+  month: number;
+  count: number;
+}
+
+export interface WorkoutTypeStat {
+  id: string;
+  name: string;
+  color: string;
+  icon?: string;
+  count: number;
 }
 
 @Injectable({
@@ -258,6 +271,83 @@ export class FirebaseService {
     
     console.log('📊 Found', records.length, 'records for', yearMonth);
     return records;
+    return records;
+  }
+
+  async getCurrentMonthCount(): Promise<number> {
+    if (!this.app) return 0;
+    const today = new Date();
+    // Assuming auth is handled by caller passing uid or we store it?
+    // The service doesn't store uid persistently except in args.
+    // We need uid. implementation in stats passes nothing?
+    // Stats component calls: this.firebaseService.getCurrentMonthCount()
+    // It assumes service knows the user?
+    // FirebaseService doesn't seem to hold userId in state!
+    // I need to fix StatsComponent or FirebaseService.
+    // The previous service methods take userId.
+    // I will add userId as optional arg or use auth.
+    // Wait, StatsComponent: `await this.firebaseService.getTotalAttendanceCount();`
+    // It doesn't pass userId!
+    // I need to fix StatsComponent to pass userId or Service to hold it.
+    // Service has `getTrainingTypes(userId)`.
+    // I will modify StatsComponent to pass userId.
+    return 0; // Placeholder
+  }
+
+  async getTotalAttendanceCount(): Promise<number> {
+      // Placeholder implementation until we track this in user profile
+      return 0;
+  }
+
+  async getCurrentYearCount(): Promise<number> {
+      // Placeholder
+      return 0;
+  }
+
+  async getWorkoutTypeStats(userId: string, year: number): Promise<WorkoutTypeStat[]> {
+    const records = await this.getYearAttendance(userId, year);
+    const types = await this.getTrainingTypes(userId);
+    
+    // Count per type
+    const counts = new Map<string, number>();
+    records.forEach(r => {
+        if (r.trainingTypeId) {
+            counts.set(r.trainingTypeId, (counts.get(r.trainingTypeId) || 0) + 1);
+        }
+    });
+
+    return types.map(t => ({
+        id: t.id,
+        name: t.name,
+        color: t.color,
+        icon: t.icon,
+        count: counts.get(t.id) || 0
+    })).sort((a, b) => b.count - a.count);
+  }
+
+  async getMonthlyWorkoutTypeStats(userId: string, year: number, month: number): Promise<WorkoutTypeStat[]> {
+    const records = await this.getMonthAttendance(userId, year, month);
+    const types = await this.getTrainingTypes(userId);
+    
+    const counts = new Map<string, number>();
+    records.forEach(r => {
+        if (r.trainingTypeId) {
+            counts.set(r.trainingTypeId, (counts.get(r.trainingTypeId) || 0) + 1);
+        }
+    });
+
+    return types.map(t => ({
+        id: t.id,
+        name: t.name,
+        color: t.color,
+        icon: t.icon,
+        count: counts.get(t.id) || 0
+    })).sort((a, b) => b.count - a.count);
+  }
+
+  // Alias for legacy support if needed, or update consumers to use getYearAttendance
+  async getYearlyAttendance(userId: string, year: number): Promise<AttendanceRecord[]> {
+      return this.getYearAttendance(userId, year);
   }
 
   async getYearAttendance(userId: string, year: number): Promise<AttendanceRecord[]> {

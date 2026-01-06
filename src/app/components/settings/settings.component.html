@@ -1,53 +1,53 @@
 <div class="settings-container">
   <header class="page-header">
     <a routerLink="/profile" class="back-btn">‹</a>
-    <h2>Settings</h2>
+    <h2>{{ 'SETTINGS.TITLE' | translate }}</h2>
   </header>
 
   <div class="settings-content">
     <div class="settings-section">
-      <h4>About</h4>
+      <h4>{{ 'SETTINGS.ABOUT' | translate }}</h4>
       
       <div class="setting-item">
         <div class="setting-info">
-          <span class="setting-label">App Version</span>
+          <span class="setting-label">{{ 'SETTINGS.APP_VERSION' | translate }}</span>
           <span class="setting-value">{{ appVersion }}</span>
         </div>
       </div>
 
       <div class="setting-item">
         <div class="setting-info">
-          <span class="setting-label">Built With</span>
+          <span class="setting-label">{{ 'SETTINGS.BUILT_WITH' | translate }}</span>
           <span class="setting-value">Angular + Firebase</span>
         </div>
       </div>
     </div>
 
     <div class="settings-section">
-      <h4>Security</h4>
+      <h4>{{ 'SETTINGS.SECURITY' | translate }}</h4>
 
       <div class="setting-item">
         <div class="setting-info">
-          <span class="setting-label">Password</span>
+          <span class="setting-label">{{ 'SETTINGS.PASSWORD' | translate }}</span>
           <span class="setting-value">••••••••</span>
         </div>
         <button class="btn-text" (click)="togglePasswordForm()">
-          {{ showPasswordForm ? 'Cancel' : 'Change' }}
+          {{ showPasswordForm ? ('SETTINGS.CANCEL' | translate) : ('SETTINGS.CHANGE' | translate) }}
         </button>
       </div>
 
       <div class="password-form" *ngIf="showPasswordForm">
         <div class="form-group">
-          <label>Current Password</label>
-          <input type="password" [(ngModel)]="passwordData.currentPassword" placeholder="Enter current password" [disabled]="isLoading">
+          <label>{{ 'SETTINGS.CURRENT_PASSWORD' | translate }}</label>
+          <input type="password" [(ngModel)]="passwordData.currentPassword" [placeholder]="'SETTINGS.CURRENT_PASSWORD' | translate" [disabled]="isLoading">
         </div>
         <div class="form-group">
-          <label>New Password</label>
-          <input type="password" [(ngModel)]="passwordData.newPassword" placeholder="Enter new password" [disabled]="isLoading">
+          <label>{{ 'SETTINGS.NEW_PASSWORD' | translate }}</label>
+          <input type="password" [(ngModel)]="passwordData.newPassword" [placeholder]="'SETTINGS.NEW_PASSWORD' | translate" [disabled]="isLoading">
         </div>
         <div class="form-group">
-          <label>Confirm Password</label>
-          <input type="password" [(ngModel)]="passwordData.confirmPassword" placeholder="Confirm new password" [disabled]="isLoading">
+          <label>{{ 'SETTINGS.CONFIRM_PASSWORD' | translate }}</label>
+          <input type="password" [(ngModel)]="passwordData.confirmPassword" [placeholder]="'SETTINGS.CONFIRM_PASSWORD' | translate" [disabled]="isLoading">
         </div>
 
         <div class="message {{ message.type }}" *ngIf="message">
@@ -55,18 +55,18 @@
         </div>
 
         <button class="btn-primary" (click)="updatePassword()" [disabled]="isLoading || !passwordData.newPassword || !passwordData.currentPassword">
-          {{ isLoading ? 'Updating...' : 'Update Password' }}
+          {{ isLoading ? ('SETTINGS.UPDATING' | translate) : ('SETTINGS.UPDATE_PASSWORD' | translate) }}
         </button>
       </div>
     </div>
 
     <div class="settings-section">
-      <h4>Coming Soon</h4>
+      <h4>{{ 'SETTINGS.GENERAL' | translate }}</h4>
       
       <div class="setting-item">
         <div class="setting-info">
-          <span class="setting-label">Theme</span>
-          <span class="setting-value">{{ themeService.isDarkMode() ? 'Dark Mode' : 'Light Mode' }}</span>
+          <span class="setting-label">{{ 'SETTINGS.THEME' | translate }}</span>
+          <span class="setting-value">{{ themeService.isDarkMode() ? ('SETTINGS.DARK_MODE' | translate) : ('SETTINGS.LIGHT_MODE' | translate) }}</span>
         </div>
         <button class="theme-toggle" (click)="toggleTheme()" [class.dark]="themeService.isDarkMode()">
           <span class="toggle-icon sun">☀️</span>
@@ -75,12 +75,28 @@
         </button>
       </div>
 
+      <div class="setting-item">
+        <div class="setting-info">
+          <span class="setting-label">{{ 'SETTINGS.LANGUAGE' | translate }}</span>
+          <span class="setting-value">{{ languageService.currentLang() === 'ro' ? ('SETTINGS.ROMANIAN' | translate) : ('SETTINGS.ENGLISH' | translate) }}</span>
+        </div>
+        <button class="language-toggle" [class.ro]="languageService.currentLang() === 'ro'" (click)="setLanguage(languageService.currentLang() === 'en' ? 'ro' : 'en')">
+          <span class="lang-text" style="grid-column: 1;">EN</span>
+          <span class="lang-text" style="grid-column: 2;">RO</span>
+          <div class="toggle-thumb"></div>
+        </button>
+      </div>
+
       <div class="setting-item disabled">
         <div class="setting-info">
-          <span class="setting-label">Export Data</span>
-          <span class="setting-value">Not available</span>
+          <span class="setting-label">{{ 'SETTINGS.EXPORT_DATA' | translate }}</span>
+          <span class="setting-value">{{ 'SETTINGS.NOT_AVAILABLE' | translate }}</span>
         </div>
       </div>
+
+      <button class="btn-text" style="width: 100%; margin-top: 1rem; color: #ef4444;" (click)="authService.logout()">
+        {{ 'SETTINGS.LOGOUT' | translate }}
+      </button>
     </div>
   </div>
 </div>

@@ -2,13 +2,15 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 import { AuthService } from '../../services/auth.service';
+import { LanguageService } from '../../services/language.service';
 import { ThemeService } from '../../services/theme.service';
 
 @Component({
   selector: 'app-settings',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule],
+  imports: [CommonModule, RouterLink, FormsModule, TranslateModule],
   templateUrl: './settings.component.html',
   styleUrls: ['./settings.component.css']
 })
@@ -28,8 +30,13 @@ export class SettingsComponent {
 
   constructor(
     public themeService: ThemeService,
-    private authService: AuthService
+    public authService: AuthService,
+    public languageService: LanguageService
   ) {}
+
+  setLanguage(lang: string) {
+    this.languageService.setLanguage(lang);
+  }
 
   toggleTheme() {
     this.themeService.toggleTheme();

@@ -139,6 +139,57 @@ h4 {
   border-color: #334155;
 }
 
+/* Language Toggle Switch (Reusing/Extending theme styles) */
+.language-toggle {
+  background: var(--hover-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 30px;
+  width: 64px;
+  height: 32px;
+  position: relative;
+  cursor: pointer;
+  padding: 0;
+  transition: background-color 0.3s;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  justify-items: center;
+}
+
+.lang-text {
+  font-size: 10px;
+  font-weight: 700;
+  z-index: 1;
+  line-height: 1;
+  user-select: none;
+  pointer-events: none;
+  color: var(--text-secondary);
+}
+
+.language-toggle .toggle-thumb {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 24px;
+  height: 24px;
+  background: var(--primary-color);
+  border-radius: 50%;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  transition: transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+  z-index: 2;
+}
+
+/* RO Active (Move right) */
+.language-toggle.ro .toggle-thumb {
+  transform: translateX(32px);
+  background: #e11d48; /* Reddish for RO? Or just keep consistent */
+}
+
+/* EN Active */
+.language-toggle:not(.ro) .toggle-thumb {
+  background: #2563eb; /* Blueish for EN */
+}
+
 @media (max-width: 640px) {
   .settings-container {
     padding: 1rem;

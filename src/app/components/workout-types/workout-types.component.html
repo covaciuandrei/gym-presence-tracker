@@ -1,22 +1,22 @@
 <div class="workout-types-container">
   <header class="page-header">
     <a routerLink="/profile" class="back-btn">‹</a>
-    <h2>Workout Types</h2>
+    <h2>{{ 'WORKOUT_TYPES.TITLE' | translate }}</h2>
     <button class="add-btn" (click)="openCreateModal()">+</button>
   </header>
 
   <!-- Loading State -->
   <div class="loading-state" *ngIf="isLoading">
     <div class="spinner"></div>
-    <p>Loading workout types...</p>
+    <p>{{ 'WORKOUT_TYPES.LOADING' | translate }}</p>
   </div>
 
   <!-- Empty State -->
   <div class="empty-state" *ngIf="!isLoading && workoutTypes.length === 0">
     <div class="empty-icon">🏋️</div>
-    <h3>No Workout Types Yet</h3>
-    <p>Create custom workout types to categorize your gym sessions</p>
-    <button class="btn-primary" (click)="openCreateModal()">Create Your First Type</button>
+    <h3>{{ 'WORKOUT_TYPES.EMPTY_TITLE' | translate }}</h3>
+    <p>{{ 'WORKOUT_TYPES.EMPTY_DESC' | translate }}</p>
+    <button class="btn-primary" (click)="openCreateModal()">{{ 'WORKOUT_TYPES.CREATE_FIRST' | translate }}</button>
   </div>
 
   <!-- Workout Types List -->
@@ -44,23 +44,23 @@
 <div class="modal-overlay" *ngIf="showModal" (click)="closeModal()">
   <div class="modal" (click)="$event.stopPropagation()">
     <div class="modal-header">
-      <h3>{{ modalMode === 'create' ? 'Create' : 'Edit' }} Workout Type</h3>
+      <h3>{{ (modalMode === 'create' ? 'WORKOUT_TYPES.CREATE_TITLE' : 'WORKOUT_TYPES.EDIT_TITLE') | translate }}</h3>
       <button class="close-btn" (click)="closeModal()">×</button>
     </div>
 
     <div class="modal-body">
       <div class="form-group">
-        <label>Name</label>
+        <label>{{ 'WORKOUT_TYPES.NAME_LABEL' | translate }}</label>
         <input 
           type="text" 
           [(ngModel)]="typeName" 
-          placeholder="e.g., Weight Training"
+          [placeholder]="'WORKOUT_TYPES.NAME_PLACEHOLDER' | translate"
           maxlength="30"
         />
       </div>
 
       <div class="form-group">
-        <label>Icon</label>
+        <label>{{ 'WORKOUT_TYPES.ICON_LABEL' | translate }}</label>
         <div class="icon-grid">
           <button 
             *ngFor="let icon of icons"
@@ -74,7 +74,7 @@
       </div>
 
       <div class="form-group">
-        <label>Color</label>
+        <label>{{ 'WORKOUT_TYPES.COLOR_LABEL' | translate }}</label>
         <div class="color-grid">
           <button 
             *ngFor="let color of colors"
@@ -89,24 +89,24 @@
       </div>
 
       <div class="preview">
-        <label>Preview</label>
+        <label>{{ 'WORKOUT_TYPES.PREVIEW_LABEL' | translate }}</label>
         <div class="preview-card">
           <div class="preview-icon" [style.background]="typeColor + '20'" [style.color]="typeColor">
             {{ typeIcon }}
           </div>
-          <span class="preview-name">{{ typeName || 'Workout Name' }}</span>
+          <span class="preview-name">{{ typeName || ('WORKOUT_TYPES.PREVIEW_NAME' | translate) }}</span>
         </div>
       </div>
     </div>
 
     <div class="modal-footer">
-      <button class="btn-secondary" (click)="closeModal()">Cancel</button>
+      <button class="btn-secondary" (click)="closeModal()">{{ 'WORKOUT_TYPES.CANCEL_BTN' | translate }}</button>
       <button 
         class="btn-primary" 
         (click)="saveWorkoutType()" 
         [disabled]="!typeName.trim() || isSaving"
       >
-        <span *ngIf="!isSaving">{{ modalMode === 'create' ? 'Create' : 'Save' }}</span>
+        <span *ngIf="!isSaving">{{ (modalMode === 'create' ? 'WORKOUT_TYPES.CREATE_BTN' : 'WORKOUT_TYPES.SAVE_BTN') | translate }}</span>
         <span *ngIf="isSaving" class="loading-spinner"></span>
       </button>
     </div>
@@ -117,18 +117,18 @@
 <div class="modal-overlay" *ngIf="showDeleteConfirm" (click)="closeDeleteConfirm()">
   <div class="modal delete-modal" (click)="$event.stopPropagation()">
     <div class="modal-header">
-      <h3>Delete Workout Type?</h3>
+      <h3>{{ 'WORKOUT_TYPES.DELETE_TITLE' | translate }}</h3>
     </div>
 
     <div class="modal-body">
-      <p>Are you sure you want to delete <strong>{{ typeToDelete?.name }}</strong>?</p>
-      <p class="warning">This action cannot be undone.</p>
+      <p [innerHTML]="'WORKOUT_TYPES.DELETE_CONFIRM' | translate:{name: typeToDelete?.name}"></p>
+      <p class="warning">{{ 'WORKOUT_TYPES.DELETE_WARNING' | translate }}</p>
     </div>
 
     <div class="modal-footer">
-      <button class="btn-secondary" (click)="closeDeleteConfirm()">Cancel</button>
+      <button class="btn-secondary" (click)="closeDeleteConfirm()">{{ 'WORKOUT_TYPES.CANCEL_BTN' | translate }}</button>
       <button class="btn-danger" (click)="deleteWorkoutType()" [disabled]="isSaving">
-        <span *ngIf="!isSaving">Delete</span>
+        <span *ngIf="!isSaving">{{ 'WORKOUT_TYPES.DELETE_BTN' | translate }}</span>
         <span *ngIf="isSaving" class="loading-spinner"></span>
       </button>
     </div>

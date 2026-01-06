@@ -130,6 +130,10 @@ export class AuthService {
     console.log('✅ Signed out successfully');
   }
 
+  logout(): void {
+    this.signOutUser();
+  }
+
   async resetPassword(email: string): Promise<void> {
     if (!this.auth) throw new Error('Firebase Auth not initialized');
     

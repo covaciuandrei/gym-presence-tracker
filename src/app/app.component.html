@@ -3,15 +3,15 @@
   <nav class="bottom-nav" *ngIf="showNav">
     <a routerLink="/calendar" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-item">
       <span class="nav-icon">📅</span>
-      <span class="nav-label">Calendar</span>
+      <span class="nav-label">{{ 'NAV.CALENDAR' | translate }}</span>
     </a>
     <a routerLink="/stats" routerLinkActive="active" class="nav-item">
       <span class="nav-icon">📊</span>
-      <span class="nav-label">Stats</span>
+      <span class="nav-label">{{ 'NAV.STATS' | translate }}</span>
     </a>
     <a routerLink="/profile" routerLinkActive="active" class="nav-item">
       <span class="nav-icon">👤</span>
-      <span class="nav-label">Profile</span>
+      <span class="nav-label">{{ 'NAV.PROFILE' | translate }}</span>
     </a>
   </nav>
   

@@ -2,33 +2,33 @@
   <div class="auth-card">
     <div class="auth-header">
       <div class="logo">💪</div>
-      <h1>Create Account</h1>
-      <p>Start tracking your gym progress today</p>
+      <h1>{{ 'AUTH.CREATE_ACCOUNT' | translate }}</h1>
+      <p>{{ 'AUTH.CREATE_ACCOUNT_SUBTITLE' | translate }}</p>
     </div>
 
     <form (ngSubmit)="onSubmit()" class="auth-form">
       <div class="form-group">
-        <label for="email">Email</label>
+        <label for="email">{{ 'AUTH.EMAIL' | translate }}</label>
         <input
           type="email"
           id="email"
           [(ngModel)]="email"
           name="email"
-          placeholder="Enter your email"
+          placeholder="{{ 'AUTH.ENTER_EMAIL' | translate }}"
           autocomplete="email"
           required
         />
       </div>
 
       <div class="form-group">
-        <label for="password">Password</label>
+        <label for="password">{{ 'AUTH.PASSWORD' | translate }}</label>
         <div class="password-input-wrapper">
           <input
             [type]="showPassword ? 'text' : 'password'"
             id="password"
             [(ngModel)]="password"
             name="password"
-            placeholder="Create a strong password"
+            placeholder="{{ 'AUTH.CREATE_STRONG_PASSWORD' | translate }}"
             autocomplete="new-password"
             required
           />
@@ -61,14 +61,14 @@
       </div>
 
       <div class="form-group">
-        <label for="confirmPassword">Confirm Password</label>
+        <label for="confirmPassword">{{ 'AUTH.CONFIRM_PASSWORD' | translate }}</label>
         <div class="password-input-wrapper">
           <input
             [type]="showConfirmPassword ? 'text' : 'password'"
             id="confirmPassword"
             [(ngModel)]="confirmPassword"
             name="confirmPassword"
-            placeholder="Confirm your password"
+            placeholder="{{ 'AUTH.CONFIRM_YOUR_PASSWORD' | translate }}"
             autocomplete="new-password"
             required
           />
@@ -81,8 +81,8 @@
           </button>
         </div>
         <span class="match-indicator" *ngIf="confirmPassword">
-          <span *ngIf="password === confirmPassword" class="match">✓ Passwords match</span>
-          <span *ngIf="password !== confirmPassword" class="no-match">✗ Passwords don't match</span>
+          <span *ngIf="password === confirmPassword" class="match">{{ 'AUTH.PASSWORDS_MATCH' | translate }}</span>
+          <span *ngIf="password !== confirmPassword" class="no-match">{{ 'AUTH.PASSWORDS_DONT_MATCH' | translate }}</span>
         </span>
       </div>
 
@@ -92,22 +92,22 @@
 
       <div class="success-card" *ngIf="successMessage">
         <div class="success-icon">✅</div>
-        <h3>Account Created!</h3>
+        <h3>{{ 'AUTH.ACCOUNT_CREATED' | translate }}</h3>
         <p>{{ successMessage }}</p>
         <button class="btn-primary" (click)="goToLogin()">
-          Go to Sign In ({{ redirectCountdown }}s)
+          {{ 'AUTH.GO_TO_SIGN_IN' | translate }} ({{ redirectCountdown }}s)
         </button>
-        <p class="redirect-hint">Redirecting automatically...</p>
+        <p class="redirect-hint">{{ 'AUTH.REDIRECTING' | translate }}</p>
       </div>
 
       <button type="submit" class="btn-primary" [disabled]="isLoading || successMessage">
-        <span *ngIf="!isLoading">Create Account</span>
+        <span *ngIf="!isLoading">{{ 'AUTH.CREATE_ACCOUNT' | translate }}</span>
         <span *ngIf="isLoading" class="loading-spinner"></span>
       </button>
     </form>
 
     <div class="auth-footer">
-      <p>Already have an account? <a routerLink="/login">Sign in</a></p>
+      <p>{{ 'AUTH.WELCOME_BACK' | translate }} <a routerLink="/login">{{ 'AUTH.SIGN_IN' | translate }}</a></p>
     </div>
   </div>
 </div>

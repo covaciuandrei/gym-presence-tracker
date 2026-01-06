@@ -1,14 +1,16 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 import { filter } from 'rxjs/operators';
 import { AuthService } from './services/auth.service';
+import { LanguageService } from './services/language.service';
 import { ThemeService } from './services/theme.service';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive],
+  imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive, TranslateModule],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
@@ -23,7 +25,8 @@ export class AppComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private router: Router,
-    private themeService: ThemeService // Initialize theme service immediately
+    private themeService: ThemeService,
+    private languageService: LanguageService
   ) {}
 
   ngOnInit() {

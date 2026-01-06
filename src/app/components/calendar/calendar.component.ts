@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
 import { AttendanceRecord, FirebaseService, TrainingType } from '../../services/firebase.service';
@@ -23,7 +24,7 @@ interface MonthData {
 @Component({
   selector: 'app-calendar',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TranslateModule],
   templateUrl: './calendar.component.html',
   styleUrls: ['./calendar.component.css']
 })
@@ -57,11 +58,30 @@ export class CalendarComponent implements OnInit, OnDestroy {
   private userId: string | null = null;
 
   monthNames = [
-    'January', 'February', 'March', 'April', 'May', 'June',
-    'July', 'August', 'September', 'October', 'November', 'December'
+    'JANUARY', 'FEBRUARY', 'MARCH', 'APRIL', 'MAY', 'JUNE',
+    'JULY', 'AUGUST', 'SEPTEMBER', 'OCTOBER', 'NOVEMBER', 'DECEMBER'
   ];
 
-  weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  weekDays = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+  
+  // Helper to get day number from date string YYYY-MM-DD
+  getDay(dateStr: string): string {
+    if (!dateStr) return '';
+    return dateStr.split('-')[2];
+  }
+  
+  // Helper to get month key from date string YYYY-MM-DD
+  getMonthKey(dateStr: string): string {
+    if (!dateStr) return '';
+    const monthIndex = parseInt(dateStr.split('-')[1]) - 1;
+    return this.monthNames[monthIndex];
+  }
+  
+  // Helper to get year from date string YYYY-MM-DD
+  getYear(dateStr: string): string {
+    if (!dateStr) return '';
+    return dateStr.split('-')[0];
+  }
 
   constructor(
     private firebaseService: FirebaseService,

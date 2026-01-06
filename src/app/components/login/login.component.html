@@ -2,33 +2,36 @@
   <div class="auth-card">
     <div class="auth-header">
       <div class="logo">💪</div>
-      <h1>Welcome Back</h1>
-      <p>Sign in to track your gym attendance</p>
+      <h1>{{ 'AUTH.WELCOME_BACK' | translate }}</h1>
+      <p>{{ 'AUTH.SIGN_IN_SUBTITLE' | translate }}</p>
     </div>
 
     <form (ngSubmit)="onSubmit()" class="auth-form">
       <div class="form-group">
-        <label for="email">Email</label>
+        <label for="email">{{ 'AUTH.EMAIL' | translate }}</label>
         <input
           type="email"
           id="email"
           [(ngModel)]="email"
           name="email"
-          placeholder="Enter your email"
+          placeholder="{{ 'AUTH.ENTER_EMAIL' | translate }}"
           autocomplete="email"
           required
         />
       </div>
 
       <div class="form-group">
-        <label for="password">Password</label>
+        <div class="label-row">
+          <label for="password">{{ 'AUTH.PASSWORD' | translate }}</label>
+          <a routerLink="/forgot-password" class="forgot-link">{{ 'AUTH.FORGOT_PASSWORD' | translate }}</a>
+        </div>
         <div class="password-input-wrapper">
           <input
             [type]="showPassword ? 'text' : 'password'"
             id="password"
             [(ngModel)]="password"
             name="password"
-            placeholder="Enter your password"
+            placeholder="{{ 'AUTH.ENTER_PASSWORD' | translate }}"
             autocomplete="current-password"
             required
           />
@@ -42,22 +45,18 @@
         </div>
       </div>
 
-      <div class="form-footer">
-        <a routerLink="/forgot-password" class="forgot-link">Forgot password?</a>
-      </div>
-
       <div class="error-message" *ngIf="errorMessage">
         {{ errorMessage }}
       </div>
 
       <button type="submit" class="btn-primary" [disabled]="isLoading">
-        <span *ngIf="!isLoading">Sign In</span>
+        <span *ngIf="!isLoading">{{ 'AUTH.SIGN_IN' | translate }}</span>
         <span *ngIf="isLoading" class="loading-spinner"></span>
       </button>
     </form>
 
     <div class="auth-footer">
-      <p>Don't have an account? <a routerLink="/register">Sign up</a></p>
+      <p>{{ 'AUTH.DONT_HAVE_ACCOUNT' | translate }} <a routerLink="/register">{{ 'AUTH.SIGN_UP' | translate }}</a></p>
     </div>
   </div>
 </div>
